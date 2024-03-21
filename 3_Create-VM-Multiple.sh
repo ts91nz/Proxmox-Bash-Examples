@@ -1,5 +1,11 @@
 #!/bin/bash
-# Create the VMs.
+
+#----------------------------------
+# Create multiple VMs from scratch.
+#----------------------------------
+# Description: 
+#   Provision multiple VMs from scratch (no template).   
+#   Configure VM cloud-init settings (ip, dns, gw etc).  
 
 # Variables
 startVMID=101
@@ -23,6 +29,7 @@ for vm in ${!vmList[@]}; do
   --cpu host --socket 1 --cores 2 \
   --vga virtio \
   --net0 virtio,bridge=vmbr1
+
 # Set VM network config, interating the IP address using "vm" counter variable.
   sudo qm set ${startVMID} --ipconfig0 "ip=10.0.10.1${vm}/24,gw=10.0.10.1"
   sudo qm set ${startVMID} --nameserver="10.0.10.1 8.8.8.8"
@@ -30,6 +37,5 @@ for vm in ${!vmList[@]}; do
   sudo qm set ${startVMID} --sshkey ~/.ssh/id_rsa.pub
   echo "Complete: ${vmList[$vm]}"
   echo ""
-  
   ((startVMID++))
 done
